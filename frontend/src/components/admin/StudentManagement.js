@@ -61,6 +61,21 @@ const StudentManagement = () => {
     setShowDetailsModal(true);
   };
 
+  const handleDeleteStudent = async (studentId, studentName) => {
+    if (!window.confirm(`Are you sure you want to delete ${studentName}? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${API_BASE}/admin/students/${studentId}`);
+      await fetchStudents(); // Refresh the list
+      alert('Student deleted successfully');
+    } catch (error) {
+      console.error('Error deleting student:', error);
+      alert(error.response?.data?.detail || 'Error deleting student');
+    }
+  };
+
   if (loading) {
     return (
       <div className="p-8">
