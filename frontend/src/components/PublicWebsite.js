@@ -16,6 +16,45 @@ import {
 
 const PublicWebsite = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [downloads, setDownloads] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    fetchPublicDownloads();
+  }, []);
+
+  const fetchPublicDownloads = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/api/downloads`);
+      setDownloads(response.data);
+    } catch (error) {
+      console.error('Error fetching downloads:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDownload = async (downloadId, filename) => {
+    try {
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND_URL}/api/downloads/${downloadId}`,
+        { responseType: 'blob' }
+      );
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+      alert('Error downloading file. Please try again.');
+    }
+  };
 
   const services = [
     {
