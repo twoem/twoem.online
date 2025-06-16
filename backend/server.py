@@ -429,6 +429,25 @@ async def delete_student(student_id: str, admin_user: User = Depends(get_admin_u
     return {"message": "Student deleted successfully"}
 
 @api_router.put("/admin/students/{student_id}/profile")
+async def update_student_profile(
+    student_id: str,
+    profile_data: StudentUpdate,
+    admin_user: User = Depends(get_admin_user)
+):
+    student = await db.students.find_one({"id": student_id})
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    update_data = profile_data.dict(exclude_unset=True)
+    update_data["updated_at"] = datetime.utcnow()
+    
+    await db.students.update_one(
+        {"id": student_id},
+        {"$set": {**update_data, "updated_at": datetime.utcnow()}}
+    )
+    return {"message": "Student profile updated successfully"}
+
+@api_router.put("/admin/students/{student_id}/academic")
 async def update_student_academic(
     student_id: str,
     academic_data: AcademicUpdate,
