@@ -179,8 +179,16 @@ const StudentManagement = () => {
                         <button
                           onClick={() => handleViewDetails(student)}
                           className="text-indigo-600 hover:text-indigo-900 mr-4"
+                          title="View Details"
                         >
                           <EyeIcon className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteStudent(student.id, student.full_name)}
+                          className="text-red-600 hover:text-red-900"
+                          title="Delete Student"
+                        >
+                          <TrashIcon className="h-4 w-4" />
                         </button>
                       </td>
                     </tr>
