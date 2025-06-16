@@ -620,6 +620,127 @@ async def delete_eulogy(eulogy_id: str, admin_user: User = Depends(get_admin_use
     return {"message": "Eulogy deleted successfully"}
 
 # =============================
+# DOWNLOADS MANAGEMENT ROUTES
+# =============================
+
+DOWNLOADS_DIR = Path(ROOT_DIR) / "uploads" / "downloads"
+DOWNLOADS_DIR.mkdir(parents=True, exist_ok=True)
+
+@api_router.post("/admin/downloads")
+async def upload_download_file(
+    title: str = Form(...),
+    description: str = Form(None),
+    file_type: str = Form("public"),
+    file: UploadFile = File(...),
+    admin_user: User = Depends(get_admin_user)
+):
+    if file_type not in ["public", "private"]:
+        raise HTTPException(status_code=400, detail="File type must be 'public' or 'private'")
+    
+    # Read file content and encode to base64
+    file_content = await file.read()
+    file_data = base64.b64encode(file_content).decode('utf-8')
+    
+    download_file = DownloadFile(
+        title=title,
+        description=description,
+        filename=file.filename,
+        file_data=file_data,
+        file_type=file_type,
+        uploaded_by=admin_user.id
+    )
+    
+    await db.downloads.insert_one(download_file.dict())
+    return {"message": "File uploaded successfully", "id": download_file.id}
+
+@api_router.get("/admin/downloads", response_model=List[DownloadFileResponse])
+async def get_all_downloads_admin(admin_user: User = Depends(get_admin_user)):
+    downloads = await db.downloads.find({"is_active": True}).to_list(1000)
+    return [DownloadFileResponse(**download) for download in downloads]
+
+@api_router.delete("/admin/downloads/{download_id}")
+async def delete_download_file(download_id: str, admin_user: User = Depends(get_admin_user)):
+    await db.downloads.update_one(
+        {"id": download_id},
+        {"$set": {"is_active": False}}
+    )
+    return {"message": "Download file deleted successfully"}
+
+# =============================
+# PUBLIC DOWNLOADS ROUTES  
+# =============================
+
+@api_router.get("/downloads", response_model=List[DownloadFileResponse])
+async def get_public_downloads():
+    # Get only active public downloads
+    downloads = await db.downloads.find({
+        "is_active": True,
+        "file_type": "public"
+    }).to_list(1000)
+    
+    return [DownloadFileResponse(**download) for download in downloads]
+
+@api_router.get("/downloads/{download_id}")
+async def download_file(download_id: str):
+    download = await db.downloads.find_one({"id": download_id, "is_active": True})
+    if not download:
+        raise HTTPException(status_code=404, detail="Download not found")
+    
+    # Check if file is public (no authentication needed)
+    if download["file_type"] != "public":
+        raise HTTPException(status_code=403, detail="Access denied. File is private.")
+    
+    # Increment download count
+    await db.downloads.update_one(
+        {"id": download_id},
+        {"$inc": {"download_count": 1}}
+    )
+    
+    # Decode base64 file data
+    file_data = base64.b64decode(download["file_data"])
+    
+    # Create a temporary file
+    temp_file = DOWNLOADS_DIR / f"temp_{download_id}_{download['filename']}"
+    with open(temp_file, "wb") as f:
+        f.write(file_data)
+    
+    return FileResponse(
+        path=temp_file,
+        filename=download["filename"],
+        media_type="application/octet-stream"
+    )
+
+@api_router.get("/downloads/private/{download_id}")
+async def download_private_file(download_id: str, current_user: User = Depends(get_current_user)):
+    download = await db.downloads.find_one({"id": download_id, "is_active": True})
+    if not download:
+        raise HTTPException(status_code=404, detail="Download not found")
+    
+    # Check if user has access (students and admins can access private files)
+    if current_user.role not in ["admin", "student"]:
+        raise HTTPException(status_code=403, detail="Access denied")
+    
+    # Increment download count
+    await db.downloads.update_one(
+        {"id": download_id},
+        {"$inc": {"download_count": 1}}
+    )
+    
+    # Decode base64 file data
+    file_data = base64.b64decode(download["file_data"])
+    
+    # Create a temporary file
+    temp_file = DOWNLOADS_DIR / f"temp_{download_id}_{download['filename']}"
+    with open(temp_file, "wb") as f:
+        f.write(file_data)
+    
+    return FileResponse(
+        path=temp_file,
+        filename=download["filename"],
+        media_type="application/octet-stream"
+    )
+
+# =============================
 # STUDENT ROUTES
 # =============================
 
