@@ -413,7 +413,22 @@ async def get_student(student_id: str, admin_user: User = Depends(get_admin_user
         raise HTTPException(status_code=404, detail="Student not found")
     return await get_student_response(Student(**student))
 
-@api_router.put("/admin/students/{student_id}/academic")
+@api_router.delete("/admin/students/{student_id}")
+async def delete_student(student_id: str, admin_user: User = Depends(get_admin_user)):
+    student = await db.students.find_one({"id": student_id})
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+    
+    # Delete the student's user account
+    user_id = student["user_id"]
+    await db.users.delete_one({"id": user_id})
+    
+    # Delete the student profile
+    await db.students.delete_one({"id": student_id})
+    
+    return {"message": "Student deleted successfully"}
+
+@api_router.put("/admin/students/{student_id}/profile")
 async def update_student_academic(
     student_id: str,
     academic_data: AcademicUpdate,
