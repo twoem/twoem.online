@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { 
   PhoneIcon, 
   EnvelopeIcon, 
@@ -9,7 +10,8 @@ import {
   PrinterIcon,
   GlobeAltIcon,
   DocumentTextIcon,
-  CameraIcon
+  CameraIcon,
+  ArrowDownTrayIcon
 } from '@heroicons/react/24/outline';
 
 const PublicWebsite = () => {
