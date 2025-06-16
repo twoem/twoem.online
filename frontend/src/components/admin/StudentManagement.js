@@ -29,7 +29,9 @@ const StudentManagement = () => {
 
   const fetchStudents = async () => {
     try {
-      const response = await axios.get(`${API_BASE}/admin/students`);
+      const response = await axios.get(`${API_BASE}/admin/students`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setStudents(response.data);
     } catch (error) {
       console.error('Error fetching students:', error);
