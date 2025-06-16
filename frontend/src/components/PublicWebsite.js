@@ -151,6 +151,7 @@ const PublicWebsite = () => {
             <ul className="hidden md:flex space-x-8">
               <li><a href="#home" className="text-white hover:text-blue-300 transition-colors">Home</a></li>
               <li><a href="#services" className="text-white hover:text-blue-300 transition-colors">Services</a></li>
+              <li><a href="#downloads" className="text-white hover:text-blue-300 transition-colors">Downloads</a></li>
               <li><a href="#gallery" className="text-white hover:text-blue-300 transition-colors">Gallery</a></li>
               <li><a href="#contact" className="text-white hover:text-blue-300 transition-colors">Contact</a></li>
               <li><a href="/login" className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">Login</a></li>
