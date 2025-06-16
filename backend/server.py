@@ -331,18 +331,15 @@ async def forgot_password(request: ForgotPasswordRequest):
     if not user:
         raise HTTPException(status_code=404, detail="Student not found")
     
-    # Generate 6-digit reset code
-    reset_code = generate_reset_code()
-    
-    # Create password reset record
+    # Create password reset record without OTP (OTP will be generated when admin approves)
     reset_record = PasswordResetRecord(
         student_username=request.username,
-        reset_code=reset_code
+        reset_code=""  # Empty until admin approves
     )
     
     await db.password_resets.insert_one(reset_record.dict())
     
-    return {"message": "Password reset request submitted. Please contact admin for approval.", "reset_code": reset_code}
+    return {"message": "Password reset request submitted. Please contact admin for approval."}
 
 @api_router.post("/auth/reset-password")
 async def reset_password(request: PasswordResetRequest):
