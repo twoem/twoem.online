@@ -31,6 +31,8 @@ const AdminDashboard = () => {
     { name: 'Academics', href: '/admin/academics', icon: AcademicCapIcon, current: location.pathname === '/admin/academics' },
     { name: 'Finance', href: '/admin/finance', icon: CurrencyDollarIcon, current: location.pathname === '/admin/finance' },
     { name: 'Certificates', href: '/admin/certificates', icon: DocumentIcon, current: location.pathname === '/admin/certificates' },
+    { name: 'Password Resets', href: '/admin/password-resets', icon: KeyIcon, current: location.pathname === '/admin/password-resets' },
+    { name: 'Downloads', href: '/admin/downloads', icon: ArrowDownTrayIcon, current: location.pathname === '/admin/downloads' },
   ];
 
   const handleLogout = () => {
