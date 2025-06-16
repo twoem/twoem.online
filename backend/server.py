@@ -561,11 +561,19 @@ async def get_password_reset_requests(admin_user: User = Depends(get_admin_user)
 
 @api_router.put("/admin/password-resets/{reset_id}/approve")
 async def approve_password_reset(reset_id: str, admin_user: User = Depends(get_admin_user)):
+    # Generate 6-digit OTP when admin approves
+    otp_code = generate_reset_code()
+    
     await db.password_resets.update_one(
         {"id": reset_id},
-        {"$set": {"status": "approved", "responded_at": datetime.utcnow(), "admin_response": "Approved by admin"}}
+        {"$set": {
+            "status": "approved", 
+            "responded_at": datetime.utcnow(), 
+            "admin_response": "Approved by admin",
+            "reset_code": otp_code
+        }}
     )
-    return {"message": "Password reset request approved"}
+    return {"message": "Password reset request approved", "otp_code": otp_code}
 
 @api_router.put("/admin/password-resets/{reset_id}/reject")
 async def reject_password_reset(reset_id: str, admin_user: User = Depends(get_admin_user)):
