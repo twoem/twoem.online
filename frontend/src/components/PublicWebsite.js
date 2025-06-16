@@ -247,6 +247,51 @@ const PublicWebsite = () => {
         </div>
       </section>
 
+      {/* Downloads Section */}
+      <section id="downloads" className="py-16">
+        <div className="container mx-auto px-4">
+          <h2 className="text-4xl font-bold text-white text-center mb-12">Public Downloads</h2>
+          {loading ? (
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
+              <p className="text-white mt-4">Loading downloads...</p>
+            </div>
+          ) : downloads.length === 0 ? (
+            <div className="text-center text-gray-300">
+              <ArrowDownTrayIcon className="h-16 w-16 mx-auto mb-4 opacity-50" />
+              <p className="text-xl">No public downloads available at the moment.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {downloads.map((download) => (
+                <div key={download.id} className="bg-black bg-opacity-40 backdrop-blur-sm rounded-xl p-6 shadow-2xl transform hover:scale-105 transition-all duration-300">
+                  <div className="flex items-center mb-4">
+                    <ArrowDownTrayIcon className="h-8 w-8 text-blue-400 mr-3" />
+                    <h3 className="text-xl font-bold text-white">{download.title}</h3>
+                  </div>
+                  
+                  {download.description && (
+                    <p className="text-gray-300 mb-4">{download.description}</p>
+                  )}
+                  
+                  <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
+                    <span>{download.filename}</span>
+                    <span>{download.download_count} downloads</span>
+                  </div>
+                  
+                  <button
+                    onClick={() => handleDownload(download.id, download.filename)}
+                    className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-2 px-4 rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700 transition-all transform hover:scale-105"
+                  >
+                    Download File
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Gallery Section */}
       <section id="gallery" className="py-16">
         <div className="container mx-auto px-4">
