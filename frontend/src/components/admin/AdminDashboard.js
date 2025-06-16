@@ -19,6 +19,8 @@ import StudentManagement from './StudentManagement';
 import AcademicManagement from './AcademicManagement';
 import FinanceManagement from './FinanceManagement';
 import CertificateManagement from './CertificateManagement';
+import PasswordResetManagement from './PasswordResetManagement';
+import DownloadsManagement from './DownloadsManagement';
 
 const AdminDashboard = () => {
   const { user, logout } = useAuth();
