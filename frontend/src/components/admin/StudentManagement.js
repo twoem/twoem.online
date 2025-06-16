@@ -73,7 +73,9 @@ const StudentManagement = () => {
     }
 
     try {
-      await axios.delete(`${API_BASE}/admin/students/${studentId}`);
+      await axios.delete(`${API_BASE}/admin/students/${studentId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       await fetchStudents(); // Refresh the list
       alert('Student deleted successfully');
     } catch (error) {
