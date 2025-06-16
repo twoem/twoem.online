@@ -737,7 +737,7 @@ async def create_default_admin():
             is_first_login=False
         )
         await db.users.insert_one(admin_user.dict())
-        logger.info("Default admin user created: username=admin, password=admin123")
+        logger.info("Default admin user created: username=admin, password=Twoemweb@2020")
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
