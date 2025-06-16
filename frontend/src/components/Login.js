@@ -43,6 +43,52 @@ const Login = () => {
     }
   };
 
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setResetMessage('');
+
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/forgot-password`, {
+        username: resetUsername
+      });
+      setResetMessage(response.data.message);
+      setShowResetForm(true);
+    } catch (error) {
+      setError(error.response?.data?.detail || 'Failed to send reset request');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePasswordReset = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    setResetMessage('');
+
+    try {
+      const response = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/api/auth/reset-password`, {
+        username: resetUsername,
+        reset_code: resetCode,
+        new_password: newPassword
+      });
+      setResetMessage(response.data.message);
+      setTimeout(() => {
+        setShowForgotPassword(false);
+        setShowResetForm(false);
+        setResetUsername('');
+        setResetCode('');
+        setNewPassword('');
+      }, 2000);
+    } catch (error) {
+      setError(error.response?.data?.detail || 'Failed to reset password');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
