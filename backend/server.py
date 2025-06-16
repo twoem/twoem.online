@@ -148,6 +148,33 @@ class EulogyResponse(BaseModel):
     is_active: bool
     days_remaining: int
 
+class DownloadFile(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    title: str
+    description: Optional[str] = None
+    filename: str
+    file_data: str  # base64 encoded
+    file_type: str  # "private" or "public"
+    uploaded_at: datetime = Field(default_factory=datetime.utcnow)
+    uploaded_by: str  # admin user id
+    download_count: int = 0
+    is_active: bool = True
+
+class DownloadFileCreate(BaseModel):
+    title: str
+    description: Optional[str] = None
+    file_type: str = "public"  # "private" or "public"
+
+class DownloadFileResponse(BaseModel):
+    id: str
+    title: str
+    description: Optional[str] = None
+    filename: str
+    file_type: str
+    uploaded_at: datetime
+    download_count: int
+    is_active: bool
+
 class PasswordResetRecord(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
     student_username: str
