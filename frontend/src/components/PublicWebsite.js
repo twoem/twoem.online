@@ -174,6 +174,7 @@ const PublicWebsite = () => {
               <ul className="space-y-4">
                 <li><a href="#home" className="block text-white hover:text-blue-300">Home</a></li>
                 <li><a href="#services" className="block text-white hover:text-blue-300">Services</a></li>
+                <li><a href="#downloads" className="block text-white hover:text-blue-300">Downloads</a></li>
                 <li><a href="#gallery" className="block text-white hover:text-blue-300">Gallery</a></li>
                 <li><a href="#contact" className="block text-white hover:text-blue-300">Contact</a></li>
                 <li><a href="/login" className="block bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 text-center">Login</a></li>
