@@ -43,7 +43,9 @@ const StudentManagement = () => {
   const handleCreateStudent = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_BASE}/admin/students`, newStudent);
+      await axios.post(`${API_BASE}/admin/students`, newStudent, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setShowCreateModal(false);
       setNewStudent({
         username: '',
