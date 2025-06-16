@@ -12,6 +12,7 @@ const StudentManagement = () => {
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
+  const { token } = useAuth();
 
   const [newStudent, setNewStudent] = useState({
     username: '',
