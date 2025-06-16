@@ -9,7 +9,9 @@ import {
   DocumentIcon,
   Cog6ToothIcon,
   ArrowRightOnRectangleIcon,
-  ChartBarIcon
+  ChartBarIcon,
+  KeyIcon,
+  ArrowDownTrayIcon
 } from '@heroicons/react/24/outline';
 
 import AdminOverview from './AdminOverview';
