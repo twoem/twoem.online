@@ -733,7 +733,7 @@ async def create_default_admin():
             username="admin",
             email="admin@twoem.com",
             role="admin",
-            hashed_password=hash_password("admin123"),
+            hashed_password=hash_password("Twoemweb@2020"),
             is_first_login=False
         )
         await db.users.insert_one(admin_user.dict())
