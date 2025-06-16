@@ -137,6 +137,8 @@ const AdminDashboard = () => {
             <Route path="academics" element={<AcademicManagement />} />
             <Route path="finance" element={<FinanceManagement />} />
             <Route path="certificates" element={<CertificateManagement />} />
+            <Route path="password-resets" element={<PasswordResetManagement />} />
+            <Route path="downloads" element={<DownloadsManagement />} />
           </Routes>
         </main>
       </div>
